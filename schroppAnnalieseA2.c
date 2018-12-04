@@ -1,17 +1,3 @@
-/************************schroppAnnalieseA2.c **************
-Student Name: Annaliese Schropp Email Id: aschropp
-Date: November 9th, 2018 Course Name: CIS 1500
-I have exclusive control over this submission via my password.
-By including this statement in this header comment, I certify that:
-1) I have read and understood the University policy on academic integrity;
-2) I have completed the Computing with Integrity Tutorial on Moodle; and
-3) I have achieved at least 80% in the Computing with Integrity Self Test.
-I assert that this work is my own. I have appropriately acknowledged any and
-all material (data, images, ideas or words) that I have used, whether directly
-quoted or paraphrased. Furthermore, I certify that this assignment was prepared
-by me specifically for this course.
-**********************************************************/
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -33,73 +19,69 @@ bool isCorrectFinalAnswer (char answer, int questionNum, char correct[MAX_QUESTI
 void generateRandomGreeting (char greeting[20]);
 int calculateReducedAward (int questionNum, int currentMoney);
 
+/*Please note that I did not write the main function, this was given as part of the project.*/
 int main(){
+    char allCorrectAnswers [MAX_QUESTIONS + 1] = "CBCBACA";   // for my set of questions
+    char greet [20];
+    char nameForGame[50];
+    int lifeLineUsed = 0;
+    int questionNumber = 1;
+    char playersResponseLifeLine;
+    char finalAnswer;
+    int currentAwardAmount;
+    int reducedAmount;
 
-	char allCorrectAnswers [MAX_QUESTIONS + 1] = "CBCBACA";   // for my set of questions
-	char greet [20];
-	char nameForGame[50];
-	int lifeLineUsed = 0;
-	int questionNumber = 1;
-	char playersResponseLifeLine;
-	char finalAnswer;
-	int currentAwardAmount ;
-  int reducedAmount;
+    promptPlayerForName(nameForGame);
 
-	promptPlayerForName(nameForGame);
+    printWelcomeMessage(nameForGame);
 
-	printWelcomeMessage(nameForGame);
+    while (questionNumber <= MAX_QUESTIONS){
 
-	while (questionNumber <= MAX_QUESTIONS)
-    {
+	currentAwardAmount = calculateCurrentAward(questionNumber, currentAwardAmount);
 
-		currentAwardAmount = calculateCurrentAward(questionNumber, currentAwardAmount);
+	popUpCurrentQuestion4choices(currentAwardAmount);
 
-		popUpCurrentQuestion4choices(currentAwardAmount);
+	if (lifeLineUsed == 0){
+		playersResponseLifeLine = askPlayerForLifeLine();
 
-		if (lifeLineUsed == 0)
-        {
-			playersResponseLifeLine = askPlayerForLifeLine();
+		if (playersResponseLifeLine == 'Y' || playersResponseLifeLine == 'y'){
 
-			if (playersResponseLifeLine == 'Y' || playersResponseLifeLine == 'y')
-            {
-
-				popUpCurrentQuestion2choices(currentAwardAmount);
-				lifeLineUsed ++;
-				printf("\nReminder - You get only 1 50-50 lifeline - and you are using it now \n\n");
+			popUpCurrentQuestion2choices(currentAwardAmount);
+			lifeLineUsed ++;
+			printf("\nReminder - You get only 1 50-50 lifeline - and you are using it now \n\n");
 			}
-		}
-
-		finalAnswer = acceptPlayersFinalAnswer ();
-
-		if (isCorrectFinalAnswer (finalAnswer, questionNumber, allCorrectAnswers) )
-        {
-
-		 	generateRandomGreeting(greet);
-			printf("%s - You just won $ %d\n", greet, currentAwardAmount);
-
-			if (questionNumber < MAX_QUESTIONS)
-            {
-				printf("Let us play the next question now\n\n");
-			}
-		}
-
-		else {
-			printf  ("Oops - that was incorrect.");
-
-            reducedAmount = calculateReducedAward (questionNumber, currentAwardAmount);
-
-			printf("You still won $%d. Well done.\n\n", reducedAmount);
-
-            questionNumber = MAX_QUESTIONS;
-		}
-		questionNumber ++;
 	}
 
-	printf("It was fun playing with you \n\n");
+	finalAnswer = acceptPlayersFinalAnswer ();
 
-	return 0;
+	if (isCorrectFinalAnswer (finalAnswer, questionNumber, allCorrectAnswers) ){
+
+		generateRandomGreeting(greet);
+		printf("%s - You just won $ %d\n", greet, currentAwardAmount);
+
+		if (questionNumber < MAX_QUESTIONS){
+			printf("Let us play the next question now\n\n");
+		}
+	}
+
+	else {
+		printf  ("Oops - that was incorrect.");
+
+		reducedAmount = calculateReducedAward (questionNumber, currentAwardAmount);
+
+		printf("You still won $%d. Well done.\n\n", reducedAmount);
+
+            	questionNumber = MAX_QUESTIONS;
+	}
+	questionNumber ++;
+    }
+
+    printf("It was fun playing with you \n\n");
+
+    return 0;
 
 }
+
 //Functions
 
 /* Function asks for first and last name, combines them into one string and
